@@ -19,6 +19,8 @@ package relex.test;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.junit.Test;
+
 import relex.ParsedSentence;
 import relex.RelationExtractor;
 import relex.Sentence;
@@ -26,16 +28,19 @@ import relex.output.SimpleView;
 
 public class TestRelEx
 {
-	private RelationExtractor re;
+	private static RelationExtractor re;
 	private int pass;
 	private int fail;
 	private int subpass;
 	private int subfail;
 	private static ArrayList<String> sentfail= new ArrayList<String>();
 
+	public static void setUpClass() {
+		re = new RelationExtractor();
+	}
+	
 	public TestRelEx()
 	{
-		re = new RelationExtractor();
 		pass = 0;
 		fail = 0;
 		subpass = 0;
@@ -82,7 +87,7 @@ public class TestRelEx
 		//parser-unary-relation-output arrayList "urgot" for unary relationships
 		for (int i=0; i< exp.size(); i++)
 		{	
-			if(!brgot.contains((String)exp.get(i)))
+			if(!brgot.contains(exp.get(i)))
 			{
 				if(!urgot.contains(exp.get(i)))
 				{
@@ -821,19 +826,25 @@ public class TestRelEx
 
 	public static void main(String[] args)
 	{
+		setUpClass();
 		TestRelEx ts = new TestRelEx();
+		ts.runTests();
+	}
+	
+	@Test
+	public void runTests() {
 		boolean rc = true;
 
-		rc &= ts.test_comparatives();
-		rc &= ts.test_extraposition();
-                rc &= ts.test_Conjunction();
+		rc &= test_comparatives();
+		rc &= test_extraposition();
+                rc &= test_Conjunction();
 
 		if (rc) {
-			System.err.println("Tested " + ts.pass + " sentences, test passed OK");
+			System.err.println("Tested " + pass + " sentences, test passed OK");
 		} else {
 			System.err.println("Test failed\n\t" +
-			                   ts.fail + " sentences failed\n\t" +
-			                   ts.pass + " sentences passed");
+			                   fail + " sentences failed\n\t" +
+			                   pass + " sentences passed");
 		}
 
 		System.err.println("******************************");
